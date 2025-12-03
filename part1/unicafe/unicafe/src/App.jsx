@@ -5,6 +5,7 @@ const App = () => {
   const [ neutral, setNeutral ] = useState(0)
   const [ bad, setBad ] = useState(0)
   const [ allVotes, setAllVotes ] = useState([])
+
   const all = allVotes.length
   const average = allVotes.length === 0
     ? 0 
@@ -50,6 +51,13 @@ const Heading = ({type, text}) => {
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
 const Statistics = ({good, neutral, bad, all, positive, average}) => {
+  if (all === 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
   return (
     <p>
       Good {good} <br />
