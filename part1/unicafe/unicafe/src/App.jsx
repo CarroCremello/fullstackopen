@@ -50,6 +50,14 @@ const Heading = ({type, text}) => {
 
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
+const StatisticLine = ({text, value}) => {
+  return (
+    <>
+      {text} {value} <br />
+    </>
+  )
+}
+
 const Statistics = ({good, neutral, bad, all, positive, average}) => {
   if (all === 0) {
     return (
@@ -60,12 +68,12 @@ const Statistics = ({good, neutral, bad, all, positive, average}) => {
   }
   return (
     <p>
-      Good {good} <br />
-      Neutral {neutral} <br />
-      Bad {bad} <br />
-      All {all} <br />
-      Average {average} <br />
-      Positive {positive}%
+      <StatisticLine text="Good" value={good} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={bad} />
+      <StatisticLine text="All" value={all} />
+      <StatisticLine text="Average" value={average} />
+      <StatisticLine text="Positive" value={positive} />
     </p>
   )
 }
