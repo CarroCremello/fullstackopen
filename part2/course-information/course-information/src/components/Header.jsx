@@ -1,8 +1,8 @@
-const Header = (props) => {
-  console.log('Header props =', props)
-  return (
-    <h1>{props.course}</h1>
-  )
+const Header = ({type, text}) => {
+    const Tag = type
+    return (
+        <Tag>{text}</Tag>
+    )
 }
 
 export default Header
