@@ -1,7 +1,8 @@
 const Total = ({parts}) => {
+
   console.log('Total parts =', parts)
-  let total = 0
-  parts.map(part => total += part.exercises)
+
+  let total = parts.reduce( (accumulator, part) => accumulator + part.exercises, 0 )
 
   return <p>Number of exercises {total}</p>
 }
