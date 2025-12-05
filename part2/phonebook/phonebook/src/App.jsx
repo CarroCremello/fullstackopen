@@ -4,12 +4,17 @@ import Heading from './components/Heading'
 import Person from './components/Person'
 
 const App = () => {
-  const [idCount, setIdCount] = useState(1)
   const [persons, setPersons] = useState([
-    { id: 1, name: 'Arto Hellas', number: '040-1234567' }
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
+  const [idCount, setIdCount] = useState(persons.length + 1)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [showAll, setShowAll] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -19,7 +24,19 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleSearch = (event) => {
+    const filter = event.target.value
+    console.log(filter)
+    setSearchTerm(filter)
+    if (filter !== '' || filter !== null) {
+      setShowAll(false)
+    }
+  }
 
+  const personsToShow = showAll
+    ? persons
+    : persons.filter(person => person.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -33,22 +50,30 @@ const App = () => {
     }
     else {
       const newPerson = {
-        id: idCount + 1,
+        id: idCount,
         name: newName,
         number: newNumber
       }
       setPersons(persons.concat(newPerson))
       setIdCount(idCount + 1)
       setNewName('')
+      setNewNumber('')
     }
   }
 
   return (
     <div>
-      <Heading type="h2" text="Phonebook" />
+      <Heading type="h1" text="Phonebook" />
+      <span>Filter contacts: </span>
+      <input 
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+
+      <Heading type="h2" text="Add new contact" />
       <form onSubmit={addPerson}>
         <div>
-          name: 
+          <span>Name: </span>
           <input 
             value={newName}
             onChange={handleNameChange}
@@ -56,7 +81,7 @@ const App = () => {
           />
         </div>
          <div>
-          number: 
+          <span>Number: </span>
           <input 
             value={newNumber}
             onChange={handleNumberChange}
@@ -64,12 +89,12 @@ const App = () => {
           />
         </div>
         <div>
-          <button type="submit">add</button>
+          <button type="submit">Add</button>
         </div>
       </form>
-      <Heading type="h2" text="Numbers" />
+      <Heading type="h2" text="Contacts" />
       <ul>
-        {persons.map((person)=> <Person key={person.id} person={person} />)}
+        {personsToShow.map((person)=> <Person key={person.id} person={person} />)}
       </ul>
     </div>
   )
