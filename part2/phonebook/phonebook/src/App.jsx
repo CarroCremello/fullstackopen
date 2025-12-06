@@ -1,9 +1,12 @@
+import './index.css'
+
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 import Heading from './components/Heading'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Contacts from './components/Contacts'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [message, setMessage] = useState([])
 
   useEffect(() => {
     console.log('effect')
@@ -63,6 +67,11 @@ const App = () => {
             // setPersons(persons.replace(updatedPerson))
             setNewName('')
             setNewNumber('')
+            const newMessage = { 
+              type: "success",
+              text: `Updated ${newName}.`
+            }
+            setMessage(newMessage)
           })
           .catch(error => {
             console.error('error: ', error)
@@ -83,6 +92,11 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        const newMessage = { 
+          type: "success",
+          text: `Added ${newName}.`
+        }
+        setMessage(newMessage)
       })
       .catch(error => {
         console.error('error: ', error)
@@ -123,7 +137,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
-
+      <Notification message={message} />
       <Heading type="h2" text="Contacts" />
       <Contacts personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>
