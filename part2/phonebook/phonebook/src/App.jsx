@@ -69,9 +69,12 @@ const App = () => {
             setNewNumber('')
             const newMessage = { 
               type: "success",
-              text: `Updated ${newName}.`
+              text: `Updated ${newName}`
             }
             setMessage(newMessage)
+            setTimeout(() => {
+              setMessage({})
+            }, 5000);
           })
           .catch(error => {
             console.error('error: ', error)
@@ -94,9 +97,12 @@ const App = () => {
         setNewNumber('')
         const newMessage = { 
           type: "success",
-          text: `Added ${newName}.`
+          text: `Added ${newName}`
         }
         setMessage(newMessage)
+        setTimeout(() => {
+          setMessage({})
+        }, 5000);
       })
       .catch(error => {
         console.error('error: ', error)
@@ -118,9 +124,27 @@ const App = () => {
         .then(deletedPerson => {
           console.log('deletedPerson: ', deletedPerson)
           setPersons(persons.filter(person => person.id !== deletedPerson.id))
+          const newMessage = { 
+            type: "success",
+            text: `Deleted ${deletedPerson.name}`
+          }
+          setMessage(newMessage)
+          setTimeout(() => {
+            setMessage({})
+          }, 5000);
         })
         .catch(error => {
           console.error('error: ', error)
+          if (error.response.status === 404) {
+            const newMessage = { 
+              type: "error",
+              text: `${person.name} has already been deleted`
+            }
+            setMessage(newMessage)
+            setTimeout(() => {
+              setMessage({})
+            }, 5000);
+          }
         })
     }
   }
@@ -128,6 +152,7 @@ const App = () => {
   return (
     <div>
       <Heading type="h1" text="Phonebook" />
+      <Notification message={message} />
       <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
       <Heading type="h2" text="Add new contact" />
       <PersonForm 
@@ -137,7 +162,6 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
-      <Notification message={message} />
       <Heading type="h2" text="Contacts" />
       <Contacts personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>

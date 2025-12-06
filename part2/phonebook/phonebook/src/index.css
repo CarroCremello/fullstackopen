@@ -1,9 +1,20 @@
-.success {
-    color: darkgreen;
+.notification {
     font-style: italic;
+    font-size: larger;
     width: fit-content;
     max-width: 100%;
-    margin-top: .5rem;
+    padding: .5rem;
+    margin: 1rem 0;
+}
+
+.success {
+    color: darkgreen;
+    background: lightgreen;
+}
+
+.error {
+    color: darkred;
+    background: lightpink;
 }
 
 button {
