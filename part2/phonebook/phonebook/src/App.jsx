@@ -8,7 +8,6 @@ import Contacts from './components/Contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [idCount, setIdCount] = useState(persons.length + 1)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showAll, setShowAll] = useState(true)
@@ -58,14 +57,16 @@ const App = () => {
     }
     else {
       const newPerson = {
-        id: idCount,
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(newPerson))
-      setIdCount(idCount + 1)
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post('http://localhost:3001/persons', newPerson)
+        .then(response => {
+          console.log(response)
+          setNewName('')
+          setNewNumber('')
+        })      
     }
   }
 
