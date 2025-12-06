@@ -48,31 +48,45 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if ( persons.some(person => person.name === newName ) || persons.some(person => person.number === newNumber) ) {
-      if ( persons.some(person => person.name === newName ) ) {
-        alert(`${newName} is already added to phonebook`)
-      }
-      if ( persons.some(person => person.number === newNumber ) ) {
-        alert(`${newNumber} is already added to phonebook`)
+    // If name exists in contacts already, ask if wanting to update contact's number
+    if ( persons.some(person => person.name === newName ) ) {
+      const confirmUpdate = window.confirm(`${newName} is already added to phonebook. Do you want to update this contact's number?`)
+      if (confirmUpdate) {
+        const existingPerson = persons.find(person => person.name === newName)
+        const id = existingPerson.id
+        const changedPerson = { ...existingPerson, number: newNumber }
+        personService
+          .update(id, changedPerson)
+          .then(updatedPerson => {
+            console.log('updatedPerson: ', updatedPerson)
+            setPersons(persons.map(person => person.id !== id ? person : updatedPerson))
+            // setPersons(persons.replace(updatedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            console.error('error: ', error)
+          })
+        return
       }
     }
-    else {
-      const newPerson = {
-        name: newName,
-        number: newNumber
-      }
-      personService
-        .create(newPerson)
-        .then(returnedPerson => {
-          console.log('returnedPerson: ', returnedPerson)
-          setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
-        })
-        .catch(error => {
-          console.error('error: ', error)
-        })
+
+    const newPerson = {
+      name: newName,
+      number: newNumber
     }
+
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        console.log('returnedPerson: ', returnedPerson)
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        console.error('error: ', error)
+      })
   }
 
   const deletePerson = (id) => {
