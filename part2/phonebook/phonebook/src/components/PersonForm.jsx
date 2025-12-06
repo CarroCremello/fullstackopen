@@ -1,3 +1,5 @@
+import Button from "./Button"
+
 const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumberChange}) => {
     return (
         <form onSubmit={addPerson}>
@@ -18,7 +20,7 @@ const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumb
             />
             </div>
             <div>
-            <button type="submit">Add</button>
+                <Button type="submit" text="Add" onClick={null} />
             </div>
         </form>
     )

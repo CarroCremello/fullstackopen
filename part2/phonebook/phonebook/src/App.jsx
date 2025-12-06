@@ -19,6 +19,9 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
+      .catch(error => {
+        console.error('error: ', error)
+      })
   }, [])
 
   const handleNameChange = (event) => {
@@ -65,7 +68,32 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
-        })    
+        })
+        .catch(error => {
+          console.error('error: ', error)
+        })
+    }
+  }
+
+  const deletePerson = (id) => {
+
+    const person = persons.find(person => person.id === id)
+    console.log('person: ', person)
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${person.name}?` )
+
+    if (confirmDelete) {
+      
+      console.log('delete confirmed')
+      personService
+        .remove(id)
+        .then(deletedPerson => {
+          console.log('deletedPerson: ', deletedPerson)
+          setPersons(persons.filter(person => person.id !== deletedPerson.id))
+        })
+        .catch(error => {
+          console.error('error: ', error)
+        })
     }
   }
 
@@ -83,7 +111,7 @@ const App = () => {
       />
 
       <Heading type="h2" text="Contacts" />
-      <Contacts personsToShow={personsToShow} />
+      <Contacts personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
