@@ -1,6 +1,6 @@
-const Country = ({country}) => {
+const Country = ({country, weather}) => {
     if (!country) return null
-    
+
     return (
         <div>
             <h2>{country.name.common}</h2>
@@ -15,6 +15,12 @@ const Country = ({country}) => {
                 ))}
             </ul>
             <img src={country.flags.png} alt={country.flags.alt} />
+
+            <h3>Weather in {country.capital}</h3>
+            <p>
+                Temperature: {weather.temperature_2m} degrees Celcius<br />
+                Wind: {weather.wind_speed_10m} m/s
+            </p>
         </div>
     )
 }
