@@ -44,11 +44,15 @@ function App() {
     console.log('Search term: ', event.target.value)
   }
 
+  const showCountry = (countryName) => {
+    setSearchTerm(countryName)
+  }
+
   return (
     <>
       <Search label="Search countries: " searchTerm={searchTerm} handleSearch={handleSearch} />
       {filteredCountries.length > 10 && (<Notification message="Too many countries, please specify your search" />)}
-      {filteredCountries.length >= 2 && filteredCountries.length <= 10 && (<Countries countriesToShow={filteredCountries} />)}
+      {filteredCountries.length >= 2 && filteredCountries.length <= 10 && (<Countries countriesToShow={filteredCountries} showCountry={showCountry} />)}
       {filteredCountries.length === 1 && (
         country && country.name?.common === filteredCountryName
           ? <Country country={country} />
