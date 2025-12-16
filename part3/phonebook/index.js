@@ -27,14 +27,23 @@ let persons = [
 app.use(express.json())
 
 app.get('/', (request, response) => {
-  response.send('<h1>My Contacts</h1>')
+    response.send('<h1>My Contacts</h1>')
+})
+
+app.get('/info', (request, response) => {
+    const date = new Date()
+    response.send(
+        `<h1>Info</h1>
+        <p>Your phonebook has ${persons.length} contacts</p>
+        <p>${date}</p>`
+    )
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+    response.json(persons)
 })
 
 const PORT = 3001
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })
