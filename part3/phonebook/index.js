@@ -29,10 +29,13 @@ const generateId = () => {
   return Math.floor(Math.random() * 1000000);
 }
 
-morgan.token('body', (request) => {
+morgan.token('body', (request) => {  
+  if (request.method !== 'POST') {
+    return
+  }
   return JSON.stringify(request.body)
 })
-app.use(morgan(':body'))
+app.use(morgan(':method :url :status :response-time ms :body'))
 
 app.use(express.json())
 
