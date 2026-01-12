@@ -1,6 +1,6 @@
 import axios from 'axios'
 let baseUrl
-import.meta.env.DEV ? baseUrl = 'http://localhost:3001/api/persons' : baseUrl = '/api/persons'
+import.meta.env.DEV ? baseUrl = 'http://localhost:3001/api/persons' : baseUrl = import.meta.env.BASE_URL
 
 console.log("baseUrl:", baseUrl);  
 
