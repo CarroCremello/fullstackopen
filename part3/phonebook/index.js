@@ -44,6 +44,8 @@ app.use(morgan(':method :url :status :response-time ms :body'))
 
 app.use(express.json())
 
+app.use(express.static('dist'))
+
 app.get('/', (request, response) => {
     response.send('<h1>My Contacts</h1>')
 })

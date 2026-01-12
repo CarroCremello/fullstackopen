@@ -1,5 +1,8 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/persons'
+let baseUrl
+import.meta.env.DEV ? baseUrl = 'http://localhost:3001/api/persons' : baseUrl = '/api/persons'
+
+console.log("baseUrl:", baseUrl);  
 
 const getAll = () => {
   const request = axios.get(baseUrl)
