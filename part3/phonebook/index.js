@@ -4,7 +4,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
-const { type } = require('os')
+// const { type } = require('os')
 const app = express()
 
 let persons = [
@@ -30,9 +30,9 @@ let persons = [
     }
 ]
 
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000);
-}
+// const generateId = () => {
+//   return Math.floor(Math.random() * 1000000);
+// }
 
 morgan.token('body', (request) => {  
   if (request.method !== 'POST') {
@@ -45,9 +45,7 @@ app.options('/api/persons', cors())
 app.options('/api/persons/:id', cors())
 
 app.use(morgan(':method :url :status :response-time ms :body'))
-
 app.use(express.json())
-
 app.use(express.static('dist'))
 
 app.get('/', (request, response) => {
@@ -64,14 +62,15 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', cors(), (request, response) => {
-  Person.find({}).then(persons => {
-    response.json(persons)
+  Person.find({}).then(contacts => {
+    persons = contacts
+    response.json(contacts)
   })
 })
 
 app.get('/api/persons/:id', cors(), (request, response) => {
   const id = request.params.id
-  
+
   Person.find({ _id : id }).then(person => {
     if (person) {
       response.json(person)
@@ -96,11 +95,15 @@ app.post('/api/persons', cors(), (request, response) => {
     })
   }
 
-  const person = {
-    id: String(generateId()),
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  })
+
+  person.save().then(result => {
+      console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
+      mongoose.connection.close()
+  })
 
   persons = persons.concat(person)
 
