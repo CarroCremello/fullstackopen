@@ -102,7 +102,6 @@ app.post('/api/persons', cors(), (request, response) => {
 
   person.save().then(result => {
       console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
-      mongoose.connection.close()
   })
 
   persons = persons.concat(person)
