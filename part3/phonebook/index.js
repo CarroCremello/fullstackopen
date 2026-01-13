@@ -88,11 +88,11 @@ app.post('/api/persons', cors(), (request, response, next) => {
     })
   }
   
-  if (persons.some(person => person.name === body.name)) {
-    return response.status(400).json({ 
-      error: 'name must be unique' 
-    })
-  }
+  // if (persons.some(person => person.name === body.name)) {
+  //   return response.status(400).json({ 
+  //     error: 'name must be unique' 
+  //   })
+  // }
 
   const person = new Person({
     name: body.name,
@@ -102,8 +102,27 @@ app.post('/api/persons', cors(), (request, response, next) => {
   person.save()
     .then(result => {
       console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
-      persons = persons.concat(person)
+      // persons = persons.concat(person)
       response.json(person)
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', cors(), (request, response, next) => {
+  const { name, number } = request.body
+
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person) {
+        return response.status(404).end()
+      }
+
+      person.name = name
+      person.number = number
+
+      return person.save().then((updatedPerson) => {
+        response.json(updatedPerson)
+      })
     })
     .catch(error => next(error))
 })

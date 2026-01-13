@@ -64,7 +64,6 @@ const App = () => {
           .then(updatedPerson => {
             console.log('updatedPerson: ', updatedPerson)
             setPersons(persons.map(person => person.id !== id ? person : updatedPerson))
-            // setPersons(persons.replace(updatedPerson))
             setNewName('')
             setNewNumber('')
             const newMessage = { 
