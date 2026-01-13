@@ -4,7 +4,6 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
-// const { type } = require('os')
 const app = express()
 
 let persons = [
@@ -29,10 +28,6 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
-
-// const generateId = () => {
-//   return Math.floor(Math.random() * 1000000);
-// }
 
 morgan.token('body', (request) => {  
   if (request.method !== 'POST') {
@@ -61,26 +56,30 @@ app.get('/info', (request, response) => {
     )
 })
 
-app.get('/api/persons', cors(), (request, response) => {
-  Person.find({}).then(contacts => {
-    persons = contacts
-    response.json(contacts)
-  })
+app.get('/api/persons', cors(), (request, response, next) => {
+  Person.find({})
+    .then(contacts => {
+      persons = contacts
+      response.json(contacts)
+    })
+    .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', cors(), (request, response) => {
+app.get('/api/persons/:id', cors(), (request, response, next) => {
   const id = request.params.id
 
-  Person.find({ _id : id }).then(person => {
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
+  Person.find({ _id : id })
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', cors(), (request, response) => {
+app.post('/api/persons', cors(), (request, response, next) => {
   const body = request.body
 
   if (!body.name || !body.number) {
@@ -100,16 +99,16 @@ app.post('/api/persons', cors(), (request, response) => {
     number: body.number
   })
 
-  person.save().then(result => {
+  person.save()
+    .then(result => {
       console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
-  })
-
-  persons = persons.concat(person)
-
-  response.json(person)
+      persons = persons.concat(person)
+      response.json(person)
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', cors(), (request, response) => {
+app.delete('/api/persons/:id', cors(), (request, response, next) => {
   const id = request.params.id
 
   Person.findByIdAndDelete(id)
@@ -118,10 +117,7 @@ app.delete('/api/persons/:id', cors(), (request, response) => {
       persons = persons.filter(person => person.id !== id)
       response.json(person).status(204).end()
     })
-    .catch(error => {
-      console.log(error)
-      response.status(404).end()
-    })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -129,6 +125,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ Error: 'There was an problem with processing your request.' })
+  } 
+
+  next(error)
+}
+
+// this has to be the last loaded middleware, also all the routes should be registered before this!
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
