@@ -26,14 +26,18 @@ app.get('/', (request, response) => {
     response.send('<h1>My Contacts</h1>')
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
     const date = new Date()
-    const numberOfContacts = Person.count()
-    response.send(
-        `<h1>Info</h1>
-        <p>Your phonebook has ${numberOfContacts} contacts</p>
-        <p>${date}</p>`
-    )
+    Person.countDocuments()
+      .then(number => {
+        response.send(
+          `<h1>Info</h1>
+          <p>Your phonebook has ${number} contacts</p>
+          <p>${date}</p>`
+        )
+      })
+      .catch(error => next(error))
+    
 })
 
 app.get('/api/persons', cors(), (request, response, next) => {
