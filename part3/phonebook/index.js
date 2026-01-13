@@ -112,14 +112,17 @@ app.post('/api/persons', cors(), (request, response) => {
 
 app.delete('/api/persons/:id', cors(), (request, response) => {
   const id = request.params.id
-  person = persons.filter(person => person.id === id)[0]
-  persons = persons.filter(person => person.id !== id)
-  // response.status(204).end()
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+
+  Person.findByIdAndDelete(id)
+    .then(result => {
+      person = persons.filter(person => person.id === id)[0]
+      persons = persons.filter(person => person.id !== id)
+      response.json(person).status(204).end()
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(404).end()
+    })
 })
 
 const unknownEndpoint = (request, response) => {
