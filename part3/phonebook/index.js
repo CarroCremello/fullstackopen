@@ -66,11 +66,11 @@ app.get('/api/persons/:id', cors(), (request, response, next) => {
 app.post('/api/persons', cors(), (request, response, next) => {
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name and/or number is missing' 
-    })
-  }
+  // if (!body.name || !body.number) {
+  //   return response.status(400).json({ 
+  //     error: 'name and/or number is missing' 
+  //   })
+  // }
   
   // if (persons.some(person => person.name === body.name)) {
   //   return response.status(400).json({ 
@@ -134,7 +134,9 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ Error: 'There was an problem with processing your request.' })
-  } 
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.message })
+  }
 
   next(error)
 }
