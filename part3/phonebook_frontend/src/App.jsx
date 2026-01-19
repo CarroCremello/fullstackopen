@@ -76,6 +76,11 @@ const App = () => {
             }, 5000);
           })
           .catch(error => {
+            const newMessage = { 
+              type: "error",
+              text: error.response.data.error
+            }
+            setMessage(newMessage)
             console.error('error: ', error)
           })
         return
