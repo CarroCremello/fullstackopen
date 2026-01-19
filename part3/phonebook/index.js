@@ -6,9 +6,10 @@ const cors = require('cors')
 const Person = require('./models/person')
 const app = express()
 
+let person
 let persons = []
 
-morgan.token('body', (request) => {  
+morgan.token('body', (request) => {
   if (request.method !== 'POST') {
     return
   }
@@ -23,21 +24,20 @@ app.use(express.json())
 app.use(express.static('dist'))
 
 app.get('/', (request, response) => {
-    response.send('<h1>My Contacts</h1>')
+  response.send('<h1>My Contacts</h1>')
 })
 
 app.get('/info', (request, response, next) => {
-    const date = new Date()
-    Person.countDocuments()
-      .then(number => {
-        response.send(
-          `<h1>Info</h1>
-          <p>Your phonebook has ${number} contacts</p>
-          <p>${date}</p>`
-        )
-      })
-      .catch(error => next(error))
-    
+  const date = new Date()
+  Person.countDocuments()
+    .then(number => {
+      response.send(
+        `<h1>Info</h1>
+        <p>Your phonebook has ${number} contacts</p>
+        <p>${date}</p>`
+      )
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/persons', cors(), (request, response, next) => {
@@ -67,14 +67,14 @@ app.post('/api/persons', cors(), (request, response, next) => {
   const body = request.body
 
   // if (!body.name || !body.number) {
-  //   return response.status(400).json({ 
-  //     error: 'name and/or number is missing' 
+  //   return response.status(400).json({
+  //     error: 'name and/or number is missing'
   //   })
   // }
-  
+
   // if (persons.some(person => person.name === body.name)) {
-  //   return response.status(400).json({ 
-  //     error: 'name must be unique' 
+  //   return response.status(400).json({
+  //     error: 'name must be unique'
   //   })
   // }
 
@@ -85,6 +85,7 @@ app.post('/api/persons', cors(), (request, response, next) => {
 
   person.save()
     .then(result => {
+      console.log('result', result)
       console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
       // persons = persons.concat(person)
       response.json(person)
@@ -116,6 +117,7 @@ app.delete('/api/persons/:id', cors(), (request, response, next) => {
 
   Person.findByIdAndDelete(id)
     .then(result => {
+      console.log('result', result)
       person = persons.filter(person => person.id === id)[0]
       persons = persons.filter(person => person.id !== id)
       response.json(person).status(204).end()
@@ -146,5 +148,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
