@@ -66,18 +66,6 @@ app.get('/api/persons/:id', cors(), (request, response, next) => {
 app.post('/api/persons', cors(), (request, response, next) => {
   const body = request.body
 
-  // if (!body.name || !body.number) {
-  //   return response.status(400).json({
-  //     error: 'name and/or number is missing'
-  //   })
-  // }
-
-  // if (persons.some(person => person.name === body.name)) {
-  //   return response.status(400).json({
-  //     error: 'name must be unique'
-  //   })
-  // }
-
   const person = new Person({
     name: body.name,
     number: body.number
@@ -87,7 +75,6 @@ app.post('/api/persons', cors(), (request, response, next) => {
     .then(result => {
       console.log('result', result)
       console.log(`Added ${body.name} with number ${body.number} to the phonebook!`)
-      // persons = persons.concat(person)
       response.json(person)
     })
     .catch(error => next(error))
@@ -96,8 +83,7 @@ app.post('/api/persons', cors(), (request, response, next) => {
 app.put('/api/persons/:id', cors(), (request, response, next) => {
   const id = request.params.id
   const newNumber = request.body.number
-
-  Person.findByIdAndUpdate(id, { number : newNumber }, { runValidators: true })
+  Person.findByIdAndUpdate(id, { number : newNumber }, { new : true, runValidators: true })
     .then(updatedPerson => {
       if (!updatedPerson) {
         return response.status(404).end()
@@ -111,8 +97,7 @@ app.delete('/api/persons/:id', cors(), (request, response, next) => {
   const id = request.params.id
 
   Person.findByIdAndDelete(id)
-    .then(result => {
-      console.log('result', result)
+    .then(() => {
       person = persons.filter(person => person.id === id)[0]
       persons = persons.filter(person => person.id !== id)
       response.json(person).status(204).end()
