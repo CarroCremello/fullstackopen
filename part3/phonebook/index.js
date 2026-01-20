@@ -94,20 +94,15 @@ app.post('/api/persons', cors(), (request, response, next) => {
 })
 
 app.put('/api/persons/:id', cors(), (request, response, next) => {
-  const { name, number } = request.body
+  const id = request.params.id
+  const newNumber = request.body.number
 
-  Person.findById(request.params.id)
-    .then(person => {
-      if (!person) {
+  Person.findByIdAndUpdate(id, { number : newNumber }, { runValidators: true })
+    .then(updatedPerson => {
+      if (!updatedPerson) {
         return response.status(404).end()
       }
-
-      person.name = name
-      person.number = number
-
-      return person.save().then((updatedPerson) => {
-        response.json(updatedPerson)
-      })
+      return response.json(updatedPerson)
     })
     .catch(error => next(error))
 })
