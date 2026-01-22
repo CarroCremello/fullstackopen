@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 { 
-    "title" : "A Blog Title",
-    "author" : "Jane Doe",
-    "url" : "https://fullstackopen.com/en",
+    "title" : "Blog Title",
+    "author" : "John Doe",
+    "url" : "https://fullstackopen.com",
     "likes" : 0
 }
