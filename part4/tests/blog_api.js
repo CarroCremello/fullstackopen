@@ -10,7 +10,8 @@ const initialBlogs = [
   {
     title: "Hello World!",
     author: "John Doe",
-    url: "https://fullstackopen.com/en"
+    url: "https://fullstackopen.com/en",
+    likes: 3
   },
   {
     title: "Beautiful World",
@@ -46,7 +47,7 @@ test('unique identifier property of blog posts is named id', async () => {
   assert.strictEqual(blog._id, undefined)
 })
 
-test('a valid blog can be added ', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Testing adding blog',
     author: 'Test Ed',
@@ -66,6 +67,26 @@ test('a valid blog can be added ', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length + 1)
 
   assert(thetitle.includes('Testing adding blog'))
+})
+
+test('likes default to 0 if not added', async () => {
+  const newBlog = {
+    title: 'Testing adding blog without likes',
+    author: 'Test Ed',
+    url: 'https://testingblog.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const blog = response.body.filter(blog => blog.title === 'Testing adding blog without likes')
+
+  assert.strictEqual(blog[0].likes, 0)
 })
 
 after(async () => {
