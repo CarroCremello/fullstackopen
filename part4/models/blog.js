@@ -4,14 +4,9 @@ const config = require('../utils/config')
 const blogSchema = mongoose.Schema({
   title: {
     type: String,
-    minLength: [3, 'The title must be at least 3 charecters long. "{VALUE}" is too short'],
     required: [true, 'Title required']
   },
-  author: {
-    type: String,
-    minLength: [3, "The author's name must be at least 3 charecters long. '{VALUE}' is too short"],
-    required: [true, 'Author name required']
-  },
+  author: String,
   url: {
     type: String,
     required: [true, 'Url required']
