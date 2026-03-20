@@ -15,7 +15,6 @@ blogsRouter.post('/', userExtractor, async (request, response, next) => {
     const blog = new Blog(request.body)
 
     const user = request.user
-
     blog.user = user._id
     const savedBlog = await blog.save()
 
