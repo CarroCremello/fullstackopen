@@ -1,0 +1,49 @@
+.notification {
+    font-style: italic;
+    font-size: larger;
+    width: fit-content;
+    max-width: 100%;
+    padding: .5rem;
+    margin: 1rem 0;
+}
+
+.success {
+    color: darkgreen;
+    background: lightgreen;
+}
+
+.error {
+    color: darkred;
+    background: lightpink;
+}
+
+button {
+    background: lightgray;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: .2rem;
+    transition: all .3s
+}
+
+button:hover {
+    background: darkgray;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: .5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+    display: flex;
+    justify-content: space-between;
+    transition: all .3s
+}
+
+li:hover {
+    background: lightgray;
+}

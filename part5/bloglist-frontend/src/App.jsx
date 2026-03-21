@@ -1,3 +1,4 @@
+import './index.css'
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
@@ -10,7 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState({})
   const [blogTitle, setBlogTitle] = useState('')
   const [blogAuthor, setBlogAuthor] = useState('')
   const [blogUrl, setBlogUrl] = useState('')
@@ -44,9 +45,13 @@ const App = () => {
       setPassword('')
     } catch {
       console.log('wrong credentials')
-      setErrorMessage('wrong credentials')
+      const newMessage = { 
+        type: "error",
+        text: 'Wrong username or password'
+      }
+      setMessage(newMessage)
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -79,11 +84,23 @@ const App = () => {
       setBlogTitle('')
       setBlogAuthor('')
       setBlogUrl('')
-    } catch {
-      console.log("couldn't add blog")
-      setErrorMessage("couldn't add blog")
+      const newMessage = { 
+        type: "success",
+        text: `${blogTitle} by ${blogAuthor} added`
+      }
+      setMessage(newMessage)
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+      }, 5000)
+    } catch {
+      console.log("Couldn't add blog")
+      const newMessage = { 
+        type: "error",
+        text: "Couldn't add blog"
+      }
+      setMessage(newMessage)
+      setTimeout(() => {
+        setMessage(null)
       }, 5000)
     }
   }
@@ -166,7 +183,7 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
 
-      <Notification message={errorMessage} />
+      <Notification message={message} />
 
       {!user && loginForm()}
       {user && (
