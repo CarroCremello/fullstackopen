@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5YjE3NmFkZDBlNTJkNDcxZjc5NWVjNyIsImlhdCI6MTc3MzU3MzYwNCwiZXhwIjoxNzczNTc3MjA0fQ.ux0gYO_-37V-PgGa8T978kpFlVao35xLI51jLDDxvvA
+
+{ 
+    "title" : "New Blog Title",
+    "author" : "John Doe",
+    "url" : "https://fullstackopen.com",
+    "likes" : 0
+}
