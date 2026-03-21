@@ -8,17 +8,22 @@ const setToken = newToken => {
   return token
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+const getAll = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
 }
 
-const add = (blog) => {
+const add = async (blog) => {
   const config = {
     headers: { Authorization: token }
   }
-  const request = axios.post(baseUrl, blog, config)
-  return request.then(response => response.data)
+  const response = await axios.post(baseUrl, blog, config)
+  return response.data
 }
 
-export default { setToken, getAll, add }
+const like = async (id, blog) => {
+  const response = await axios.put(`${baseUrl}/${id}`, blog)
+  return response.data
+}
+
+export default { setToken, getAll, add, like }
