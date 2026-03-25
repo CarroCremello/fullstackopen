@@ -63,7 +63,10 @@ const App = () => {
 
   const blogList = () => (
     <div>
-      {blogs.map(blog =>
+      {blogs
+        .slice()
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
         <Blog key={blog.id} blog={blog} handleLike={handleLike} />
       )}
     </div>
