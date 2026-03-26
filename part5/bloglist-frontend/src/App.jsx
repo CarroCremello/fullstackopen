@@ -25,9 +25,14 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token)
     }
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      blogService.setToken(user.token)
+    }
+  }, [user])
 
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -39,6 +44,21 @@ const App = () => {
     } catch {
       console.log('unable to logout')
     }
+  }
+
+  const handleLike = async (updatedBlog) => {
+    const returnedBlog = await blogService.like(updatedBlog.id, updatedBlog)
+
+    setBlogs(prevBlogs =>
+      prevBlogs.map(blog =>
+        blog.id === returnedBlog.id ? returnedBlog : blog
+      )
+    )
+  }
+
+  const handleRemove = async (blogToRemove) => {
+    await blogService.remove(blogToRemove)
+    setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== blogToRemove.id))
   }
 
   const loginForm = () => {
@@ -67,7 +87,7 @@ const App = () => {
         .slice()
         .sort((a, b) => b.likes - a.likes)
         .map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
       )}
     </div>
   )
@@ -90,16 +110,6 @@ const App = () => {
           <button onClick={() => setBlogFormVisible(false)}>Cancel</button>
         </div>
       </div>
-    )
-  }
-
-  const handleLike = async (updatedBlog) => {
-    const returnedBlog = await blogService.like(updatedBlog.id, updatedBlog)
-
-    setBlogs(prevBlogs =>
-      prevBlogs.map(blog =>
-        blog.id === returnedBlog.id ? returnedBlog : blog
-      )
     )
   }
 
