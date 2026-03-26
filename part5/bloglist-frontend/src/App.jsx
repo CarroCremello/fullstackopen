@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -86,9 +86,7 @@ const App = () => {
       {blogs
         .slice()
         .sort((a, b) => b.likes - a.likes)
-        .map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
-      )}
+        .map(blog => <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>)}
     </div>
   )
 
@@ -122,13 +120,13 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          {user.name} is logged in 
+          {user.name} is logged in
           <Button type="submit" text="Logout" onClick={handleLogout} />
           {blogForm()}
         </div>
       )}
       {user && blogList()}
-      
+
     </div>
   )
 }

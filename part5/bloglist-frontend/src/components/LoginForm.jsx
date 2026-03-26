@@ -1,11 +1,8 @@
 import { useState } from "react"
 import loginService from "../services/login"
 
-const LoginForm = ({
-   handleMessage,
-   handleUser
-  }) => {
-  const [username, setUsername] = useState('') 
+const LoginForm = ({ handleMessage, handleUser }) => {
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -16,12 +13,12 @@ const LoginForm = ({
       handleUser(user)
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       setUsername('')
       setPassword('')
     } catch {
       console.log('wrong credentials')
-      const newMessage = { 
+      const newMessage = {
         type: "error",
         text: 'Wrong username or password'
       }
@@ -50,7 +47,7 @@ const LoginForm = ({
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
-      </div>
+        </div>
         <button type="submit">Login</button>
       </form>
     </div>
