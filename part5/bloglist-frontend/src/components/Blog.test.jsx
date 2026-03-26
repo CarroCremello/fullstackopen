@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest'
+import { test, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
@@ -28,4 +28,15 @@ test('shows url and likes after clicking the View button', async () => {
 
   expect(screen.getByText(/http:\/\/testurl\.com/)).toBeDefined()
   expect(screen.getByText(/42/)).toBeDefined()
+})
+
+test('calls like handler twice when like button is clicked twice', async () => {
+  const handleLike = vi.fn()
+  render(<Blog blog={blog} handleLike={handleLike} handleRemove={() => {}} user={null} />)
+
+  await userEvent.click(screen.getByText('View'))
+  await userEvent.click(screen.getByText('Like'))
+  await userEvent.click(screen.getByText('Like'))
+
+  expect(handleLike).toHaveBeenCalledTimes(2)
 })
