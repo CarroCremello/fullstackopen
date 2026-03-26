@@ -30,10 +30,10 @@ const Blog = ({ blog, handleLike, handleRemove, user }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      <span className="blog-summary">{blog.title} {blog.author}</span>
       {!open && <button onClick={() => setOpen(true)}>View</button>}
       {open && (
-        <>
+        <div className="blog-details">
           <button onClick={() => setOpen(false)}>Close</button>
           <br />
           {blog.url}
@@ -43,7 +43,7 @@ const Blog = ({ blog, handleLike, handleRemove, user }) => {
           <br />
           {blog.user?.name}
           {user?.id === blog.user?.id && <button onClick={removeBlog}>Remove</button>}
-        </>
+        </div>
       )}
 
 
