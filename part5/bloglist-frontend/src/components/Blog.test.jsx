@@ -1,5 +1,6 @@
 import { test, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 const blog = {
@@ -18,4 +19,13 @@ test('renders title and author, but not url or likes by default', () => {
 
   const details = document.querySelector('.blog-details')
   expect(details).toBeNull()
+})
+
+test('shows url and likes after clicking the View button', async () => {
+  render(<Blog blog={blog} handleLike={() => {}} handleRemove={() => {}} user={null} />)
+
+  await userEvent.click(screen.getByText('View'))
+
+  expect(screen.getByText(/http:\/\/testurl\.com/)).toBeDefined()
+  expect(screen.getByText(/42/)).toBeDefined()
 })
