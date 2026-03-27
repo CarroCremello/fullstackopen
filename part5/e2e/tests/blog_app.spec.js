@@ -37,6 +37,27 @@ describe('Blog app', () => {
 
       await expect(page.locator('.blog-summary', { hasText: 'My Test Blog' })).toBeVisible()
     })
+
+    describe('When a blog exists', () => {
+      beforeEach(async ({ page, request }) => {
+        const loginResponse = await request.post('http://localhost:3003/api/login', {
+          data: { username: 'testuser', password: 'testpassword' }
+        })
+        const { token } = await loginResponse.json()
+        await request.post('http://localhost:3003/api/blogs', {
+          data: { title: 'My Test Blog', author: 'Test Author', url: 'http://testblog.com' },
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        await page.reload()
+      })
+
+      test('a blog can be liked', async ({ page }) => {
+        await page.getByRole('button', { name: 'View' }).click()
+        await expect(page.getByText('Likes : 0')).toBeVisible()
+        await page.getByRole('button', { name: 'Like' }).click()
+        await expect(page.getByText('Likes : 1')).toBeVisible()
+      })
+    })
   })
 
   describe('Login', () => {
