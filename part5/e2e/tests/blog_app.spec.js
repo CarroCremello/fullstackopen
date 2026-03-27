@@ -64,6 +64,27 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'Like' }).click()
         await expect(page.getByText('Likes : 1')).toBeVisible()
       })
+
+      describe('When logged in as a different user', () => {
+        beforeEach(async ({ page, request }) => {
+          await request.post('http://localhost:3003/api/users', {
+            data: { username: 'otheruser', name: 'Other User', password: 'otherpassword' }
+          })
+          const loginResponse = await request.post('http://localhost:3003/api/login', {
+            data: { username: 'otheruser', password: 'otherpassword' }
+          })
+          const user = await loginResponse.json()
+          await page.evaluate((user) => {
+            localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+          }, user)
+          await page.reload()
+        })
+
+        test('the delete button is not visible', async ({ page }) => {
+          await page.getByRole('button', { name: 'View' }).click()
+          await expect(page.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+        })
+      })
     })
   })
 
