@@ -86,6 +86,49 @@ describe('Blog app', () => {
         })
       })
     })
+
+    describe('When multiple blogs exist', () => {
+      beforeEach(async ({ page, request }) => {
+        const loginResponse = await request.post('http://localhost:3003/api/login', {
+          data: { username: 'testuser', password: 'testpassword' }
+        })
+        const { token } = await loginResponse.json()
+        const headers = { Authorization: `Bearer ${token}` }
+
+        // Create three blogs with deliberately out-of-order like counts
+        await request.post('http://localhost:3003/api/blogs', {
+          data: { title: 'Less Liked Blog', author: 'Author A', url: 'http://a.com', likes: 2 },
+          headers
+        })
+        await request.post('http://localhost:3003/api/blogs', {
+          data: { title: 'Most Liked Blog', author: 'Author B', url: 'http://b.com', likes: 10 },
+          headers
+        })
+        await request.post('http://localhost:3003/api/blogs', {
+          data: { title: 'Middle Liked Blog', author: 'Author C', url: 'http://c.com', likes: 5 },
+          headers
+        })
+        await page.reload()
+      })
+
+      test('blogs are sorted by likes, most liked first', async ({ page }) => {
+        // Expand all blogs so their details (including like counts) are visible in the DOM
+        for (const button of await page.getByRole('button', { name: 'View' }).all()) {
+          await button.click()
+        }
+
+        // Read the text of each expanded blog-details section in DOM order (top to bottom)
+        const likeTexts = await page.locator('.blog-details').allTextContents()
+
+        // Extract the numeric like count from each "Likes : X" string
+        const likes = likeTexts.map(text => parseInt(text.match(/Likes : (\d+)/)[1]))
+
+        // Verify each blog has at least as many likes as the one below it
+        for (let i = 0; i < likes.length - 1; i++) {
+          expect(likes[i]).toBeGreaterThanOrEqual(likes[i + 1])
+        }
+      })
+    })
   })
 
   describe('Login', () => {
