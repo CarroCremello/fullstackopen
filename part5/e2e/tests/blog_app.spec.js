@@ -14,6 +14,31 @@ describe('Blog app', () => {
     await expect(page.locator('input[type="password"]')).toBeVisible()
   })
 
+  describe('When logged in', () => {
+    beforeEach(async ({ page, request }) => {
+      const response = await request.post('http://localhost:3003/api/login', {
+        data: { username: 'testuser', password: 'testpassword' }
+      })
+      const user = await response.json()
+      await page.evaluate((user) => {
+        localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      }, user)
+      await page.reload()
+      await expect(page.getByText('Test User is logged in')).toBeVisible()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'Add blog' }).click()
+
+      await page.getByRole('textbox', { name: 'title' }).fill('My Test Blog')
+      await page.getByRole('textbox', { name: 'author' }).fill('Test Author')
+      await page.getByRole('textbox', { name: 'url' }).fill('http://testblog.com')
+      await page.getByRole('button', { name: 'Add' }).click()
+
+      await expect(page.locator('.blog-summary', { hasText: 'My Test Blog' })).toBeVisible()
+    })
+  })
+
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
       await page.getByRole('textbox', { name: 'username' }).fill('testuser')
