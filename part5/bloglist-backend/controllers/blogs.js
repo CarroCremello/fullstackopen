@@ -2,12 +2,17 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
 
-blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog
-    .find({})
-    .populate('user', { username: 1, name: 1 })
+blogsRouter.get('/', async (request, response, next) => {
+  try {
+    const blogs = await Blog
+      .find({})
+      .populate('user', { username: 1, name: 1 })
 
-  response.json(blogs)
+    response.json(blogs)
+  } catch (error) {
+    next(error)
+  }
+  
 })
 
 blogsRouter.post('/', userExtractor, async (request, response, next) => {

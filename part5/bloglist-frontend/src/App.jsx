@@ -11,7 +11,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState({})
-  const [loginVisible, setLoginVisible] = useState(false)
   const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   useEffect(() => {
@@ -62,20 +61,14 @@ const App = () => {
   }
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
+        <div>
           <LoginForm
             handleMessage={setMessage}
             handleUser={setUser}
           />
-          <button onClick={() => setLoginVisible(false)}>Cancel</button>
         </div>
       </div>
     )

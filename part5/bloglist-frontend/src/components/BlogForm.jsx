@@ -23,9 +23,8 @@ const BlogForm = ({ handleBlogs, displayBlogForm, handleMessage }) => {
         author: blogAuthor,
         url: blogUrl,
       }
-      await blogService.add(newBlog)
-      const updatedBlogs = await blogService.getAll()
-      handleBlogs(updatedBlogs)
+      const createdBlog = await blogService.add(newBlog)
+      handleBlogs(prevBlogs => [...prevBlogs, createdBlog])
       setBlogTitle("")
       setBlogAuthor("")
       setBlogUrl("")
