@@ -33,4 +33,8 @@ const updateVotes = async (anecdote) => {
   return await response.json()
 }
 
-export default { getAll, createNew, updateVotes }
+const deleteAnecdote = async (id) => {
+  await fetch(`${baseUrl}/${id}`, { method: 'DELETE' })
+}
+
+export default { getAll, createNew, updateVotes, deleteAnecdote }
