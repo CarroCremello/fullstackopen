@@ -1,7 +1,8 @@
 
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
-const useAnecdoteStore = create((set) => ({
+const useAnecdoteStore = create(devtools((set) => ({
   anecdotes: [],
   filter: 'all',
   actions: {
@@ -19,7 +20,7 @@ const useAnecdoteStore = create((set) => ({
     setFilter: value => set(() => ({ filter: value })),
     initialize: anecdotes => set(() => ({ anecdotes }))
   },
-}))
+})))
 
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes)
