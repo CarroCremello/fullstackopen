@@ -3,7 +3,7 @@ import anecdoteService from '../services'
 import { useNotificationActions } from '../notificationStore'
 
 const AnecdoteList = () => {
-  const anecdotes = useAnecdotes().toSorted((a, b) => b.votes - a.votes)
+  const anecdotes = useAnecdotes()
   const { vote, removeAnecdote } = useAnecdoteActions()
   const { setNotification } = useNotificationActions()
 
