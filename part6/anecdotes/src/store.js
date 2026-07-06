@@ -1,6 +1,7 @@
 
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import anecdoteService from './services'
 
 const useAnecdoteStore = create(devtools((set) => ({
   anecdotes: [],
@@ -18,9 +19,14 @@ const useAnecdoteStore = create(devtools((set) => ({
       anecdotes: state.anecdotes.filter(a => a.id !== id)
     })),
     setFilter: value => set(() => ({ filter: value })),
-    initialize: anecdotes => set(() => ({ anecdotes }))
+    initialize: async () => {
+      const anecdotes = await anecdoteService.getAll()
+      set(() => ({ anecdotes }))
+    }
   },
 })))
+
+export { useAnecdoteStore }
 
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes)
