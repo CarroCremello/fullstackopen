@@ -1,13 +1,15 @@
-import { createContext, useState, useContext } from 'react'
+import { createContext, useState, useContext, useRef } from 'react'
 
 const NotificationContext = createContext()
 
 export const NotificationContextProvider = (props) => {
   const [notification, setNotification] = useState(null)
+  const timerRef = useRef(null)
 
   const showNotification = (message) => {
+    clearTimeout(timerRef.current)
     setNotification(message)
-    setTimeout(() => setNotification(null), 5000)
+    timerRef.current = setTimeout(() => setNotification(null), 5000)
   }
 
   return (
