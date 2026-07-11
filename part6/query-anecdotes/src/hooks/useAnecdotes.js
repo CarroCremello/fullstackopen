@@ -18,6 +18,9 @@ const useAnecdotes = () => {
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
       showNotification(`anecdote '${newAnecdote.content}' created`)
     },
+    onError: () => {
+      showNotification('anecdote is too short, must have length 5 or more')
+    },
   })
 
   const voteMutation = useMutation({
